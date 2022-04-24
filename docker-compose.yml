@@ -2,20 +2,19 @@ version: "2.3"
 
 services:
   percona-mysql:
-    percona/percona-server:8.0
-  environment:
-    - MYSQL_ROOT_PASSWORD=root
-    - CLUSTER_NAME=app-cluster
-    - XTRABACKUP_PASSWORD=root@123
-  ports:
-    - 3306:3306
+    image: percona/percona-server:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - CLUSTER_NAME=app-cluster
+      - XTRABACKUP_PASSWORD=root@123
+    ports:
+      - 3306:3306
   
 
 #  2 instances of applications on diff host ports
   webapp1:
     image: "web"
-    build:
-      dockerfile: app/Dockerfile
+    build: ./app
     ports: 
        - 8081:80
     links:
@@ -25,8 +24,7 @@ services:
 
   webapp2:
     image: "web" 
-    build:
-      dockerfile: app/Dockerfile       
+    build: ./app
     ports:
        - 8082:80
     links:
@@ -38,8 +36,7 @@ services:
  # Loadbalancer
   nginx:
     image: "nginx"
-    build:
-      dockerfile: nginx/Dockerfile
+    build: ./nginx
     ports:
        - 85:80
     depends_on:
